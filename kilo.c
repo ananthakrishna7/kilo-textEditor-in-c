@@ -1,15 +1,19 @@
 /*** includes ***/
 #include <ctype.h>
-
 #include <errno.h>
-
 #include <stdio.h>
-
 #include <stdlib.h>
-
 #include <termios.h>
-
 #include <unistd.h>
+
+/*** defines ***/
+#define CTRL_KEY(k) ((k) & 0x1f) // we define the CTRL_KEY(<something>) macro. It takes k and does a bitwise and with 0x1f (0b00011111)
+/* In other words, it sets the upper 3 bits of the character to 0. 
+This mirrors what the Ctrl key does in the terminal: it strips bits 5 and 6 from whatever key you press in combination with Ctrl, 
+and sends that. (By convention, bit numbering starts from 0.) The ASCII character set seems to be designed this way on purpose. 
+(It is also similarly designed so that you can set and clear bit 5 to switch between lowercase and uppercase.)*/
+
+
 
 /*** data ***/
 struct termios orig_termios;
@@ -75,7 +79,7 @@ int main()
             printf("%d ('%c')\r\n", c, c);
         }
 
-        if (c == 'q') break;
+        if (c == CTRL_KEY('q')) break; // using the CTRL_KEY macro.
         
         
     }
