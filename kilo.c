@@ -62,7 +62,7 @@ void enableRawMode()
      }
 }
 
-char editorReadKey() {
+char editorReadKey() { // editorReadKey()’s job is to wait for one keypress, and return it.
     int nread;
     char c;
     while ((nread = read(STDIN_FILENO, &c, 1)) != 1) {
@@ -73,7 +73,7 @@ char editorReadKey() {
 
 /*** input ***/
 
-void editorProcessKeypress() {
+void editorProcessKeypress() { // editorProcessKeypress() waits for a keypress, and then handles it.
     char c = editorReadKey();
 
     switch(c) {
