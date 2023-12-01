@@ -83,6 +83,7 @@ void editorRefreshScreen() {
         Also, 0 is the default argument for J, so just <esc>[J by itself would also clear the screen from 
         the cursor to the end.
     */
+   write(STDOUT_FILENO, "\x1b[H", 3);
 }
 
 /*** input ***/
