@@ -70,6 +70,20 @@ char editorReadKey() { // editorReadKey()’s job is to wait for one keypress, a
     }
     return c;
 }
+/*** output ***/
+
+void editorRefreshScreen() {
+    write(STDOUT_FILENO, "\x1b[2J", 4); // write 4 bytes to STD_FILENO. which 4 bytes? those in the second arg
+    // \x1b is the escape character, ASCII 27 in decimal notation.
+    /* \x1b[2J is an escape sequence. escape sequences start with \x1b[
+        'J' command is for "Erase In Display". It clears the screen.
+        Escape sequence commands take arguments, which come before the command. In this case the argument is 2, 
+        which says to clear the entire screen. <esc>[1J would clear the screen up to where the cursor is, 
+        and <esc>[0J would clear the screen from the cursor up to the end of the screen. 
+        Also, 0 is the default argument for J, so just <esc>[J by itself would also clear the screen from 
+        the cursor to the end.
+    */
+}
 
 /*** input ***/
 
