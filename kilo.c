@@ -125,6 +125,7 @@ int main()
     enableRawMode();
     while(1)
     {
+        editorRefreshScreen();
         editorProcessKeypress();
         // char c = '\0';
         // if(read(STDIN_FILENO, &c, 1) == -1 && errno != EAGAIN) die("read"); // errno and EAGAIN from errno.h
