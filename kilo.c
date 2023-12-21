@@ -19,7 +19,12 @@ and sends that. (By convention, bit numbering starts from 0.) The ASCII characte
 struct termios orig_termios;
 
 /*** terminal ***/
-void die(const char* s) {perror(s); exit(1);} // error handling, perror() from stdio.h. perror() looks at the global errno variable and prints the error, as well as the string s to give context about where the error occurred
+void die(const char* s) {
+    write(STDOUT_FILENO, "\x1b[2J", 4);
+    write(STDOUT_FILENO, "\x1b[H", 3);
+
+    perror(s); 
+    exit(1);} // error handling, perror() from stdio.h. perror() looks at the global errno variable and prints the error, as well as the string s to give context about where the error occurred
 // any non zero exit() value means failure. exit() comes from stdlib.h
 void disableRawMode()
 {
@@ -93,6 +98,8 @@ void editorProcessKeypress() { // editorProcessKeypress() waits for a keypress, 
 
     switch(c) {
         case CTRL_KEY('q'):
+        write(STDOUT_FILENO, "\x1b[2J", 4);
+        write(STDOUT_FILENO, "\x1b[H", 3);
         exit(0);
         break;
     }
