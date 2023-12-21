@@ -77,6 +77,15 @@ char editorReadKey() { // editorReadKey()’s job is to wait for one keypress, a
 }
 /*** output ***/
 
+void editorDrawRows(){
+    int y;
+    for ( y = 0; y < 24; y++)
+    {
+        write(STDOUT_FILENO, "~\r\n", 3);
+    }
+    
+}
+
 void editorRefreshScreen() {
     write(STDOUT_FILENO, "\x1b[2J", 4); // write 4 bytes to STD_FILENO. which 4 bytes? those in the second arg
     // \x1b is the escape character, ASCII 27 in decimal notation.
@@ -89,6 +98,11 @@ void editorRefreshScreen() {
         the cursor to the end.
     */
    write(STDOUT_FILENO, "\x1b[H", 3);
+
+   editorDrawRows(); // doesn't work
+
+   write(STDOUT_FILENO, "\x1b[H", 3);
+
 }
 
 /*** input ***/
