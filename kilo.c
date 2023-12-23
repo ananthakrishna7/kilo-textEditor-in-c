@@ -16,7 +16,12 @@ and sends that. (By convention, bit numbering starts from 0.) The ASCII characte
 
 
 /*** data ***/
-struct termios orig_termios;
+struct editorConfig
+{
+    struct termios orig_termios;
+};
+
+struct editorConfig E;
 
 /*** terminal ***/
 void die(const char* s) {
@@ -28,7 +33,7 @@ void die(const char* s) {
 // any non zero exit() value means failure. exit() comes from stdlib.h
 void disableRawMode()
 {
-    if(tcsetattr(STDIN_FILENO, TCSAFLUSH, &orig_termios) == -1) //The `TCSAFLUSH` argument specifies when to apply the change. see line 26
+    if(tcsetattr(STDIN_FILENO, TCSAFLUSH, &E.orig_termios) == -1) //The `TCSAFLUSH` argument specifies when to apply the change. see line 26
     // because of this leftover input is no longer fed to the terminal. TCSAFLUSH
     {
         die("tcserattr");
@@ -38,14 +43,14 @@ void disableRawMode()
 void enableRawMode()
 {
     struct termios raw; //create a termios structure called raw
-    if(tcgetattr(STDIN_FILENO, &orig_termios) == -1) //get terminal attributes into raw
+    if(tcgetattr(STDIN_FILENO, &E.orig_termios) == -1) //get terminal attributes into raw
     {
         die("tcgetattr");
     }
     atexit(disableRawMode); //atexit() comes from <stdlib.h>.
     // We use it to register our disableRawMode() function to be called automatically 
     //when the program exits, whether it exits by returning from main(), or by calling the exit() function. This way we can ensure we’ll leave the terminal attributes the way we found them when our program exits.
-    raw = orig_termios;
+    raw = E.orig_termios;
     raw.c_iflag &= ~(BRKINT | ICRNL | INPCK | ISTRIP | IXON); //ICRNL is ['I' input flag, 'CR' is carriage return, and 'NL' is newline. stops coversion from carriage return (Ctrl - M or Enter {ASCII 13}) to newline(Ctrl - J or ASCII 10) ]| turns off the Ctrl - S and Ctrl - Q control signals (XOFF and XON)
     raw.c_lflag &= ~(ECHO | ICANON | IEXTEN | ISIG); // setting the echo flag off so that the terminal does not echo whatever one types. canonical mode is also flipped off. now we read byte by byte. we exit as soon as 'q' is pressed.
     // .c_lflag field is for "local flags"
